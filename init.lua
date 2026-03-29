@@ -1,3 +1,4 @@
+local S = core.get_translator(core.get_current_modname())
 
 -- Simple formspec wrapper that does variable substitution.
 local function substitute(formspec, variables)
@@ -34,6 +35,9 @@ local show_nici = core.settings:get("cwe_show_nici") or false
 local function get_chest_formspec(page)
 	local start = ( page - 1 ) * items_per_page
 
+	local label_page = S('Page: @1 / @2', page, max_page)
+	local label_trash = S('Trash:')
+
 	return substitute([[
 		formspec_version[4]
 		size[15.7,10.5]
@@ -42,11 +46,11 @@ local function get_chest_formspec(page)
 
 		button[0.5,6.4;1,1;cwe_prev;\<]
 		style[pagelbl;border=false]
-		button[1.5,6.4;4,1;pagelbl;Page: ${page} / ${max_page}]
+		button[1.5,6.4;4,1;pagelbl;${label_page}]
 		button[5.52,6.4;1,1;cwe_next;\>]
 
 		style[trashlbl;border=false]
-		button[12.75,6.4;1.5,1;trashlbl;Trash:]
+		button[12.75,6.4;1.5,1;trashlbl;${label_trash}]
 		list[detached:trash;main;14.25,6.4;1,1]
 
 		listring[current_player;main]
@@ -59,7 +63,9 @@ local function get_chest_formspec(page)
 	]], {
 		start = start,
 		page = page,
-		max_page = max_page
+		max_page = max_page,
+		label_page = label_page,
+		label_trash = label_trash
 	})
 end
 
@@ -68,7 +74,7 @@ local function sheet(id)
 end
 
 core.register_node("chest_with_everything:chest", {
-	description = "Chest with Everything",
+	description = S("Chest with Everything"),
 	tiles = {
 		sheet(0), sheet(0),
 		sheet(1), sheet(1),
@@ -78,7 +84,7 @@ core.register_node("chest_with_everything:chest", {
 	on_rightclick = function(pos, node, clicker)
 		local name = clicker:get_player_name()
 		if not core.check_player_privs(clicker, 'give') and false then
-			core.chat_send_player(name, core.colorize("#ff0000", "Hey, no touching!"))
+			core.chat_send_player(name, core.colorize("#ff0000", S("Hey, no touching!")))
 			core.log("action", name.." tried to access a Chest with Everything")
 			return
 		end

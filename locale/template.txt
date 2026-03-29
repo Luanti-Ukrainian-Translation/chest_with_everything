@@ -1,0 +1,9 @@
+# textdomain: chest_with_everything
+
+Chest with Everything=
+Adds a chest node containing all registered nodes, items and tools.=
+
+Page: @1 / @2=
+Trash:=
+
+Hey, no touching!=
